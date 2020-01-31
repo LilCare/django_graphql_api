@@ -7,4 +7,4 @@ def index(request):
 
 def userLookup(request, username):
   print(username)
-  return HttpResponse(username)
+  return HttpResponse("You're looking up user %s." % username)
