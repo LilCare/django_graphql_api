@@ -31,13 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'graphql.apps.GraphqlConfig',
+    'userLanding.apps.UserLandingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -83,6 +84,13 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
+}
+
+# GraphQL API
+# https://docs.graphene-python.org/projects/django/en/latest/installation/
+
+GRAPHENE = {
+    'SCHEMA': 'django_root.schema.schema'
 }
 
 

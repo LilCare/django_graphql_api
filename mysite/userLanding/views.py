@@ -4,7 +4,7 @@ from .models import User
 
 # Create your views here.
 def index(request):
-  return HttpResponse('Here is the graphql index')
+  return HttpResponse('Here is the userLanding index')
 
 def userLookup(request, username):
   print(username)
