@@ -2,7 +2,9 @@
 API using Django, GraphQL, PostgreSQL
 
 
-## Getting Started
+## Required Environment Dependencies
+
+
 
 Within the root directory of the repo:
   ```bash

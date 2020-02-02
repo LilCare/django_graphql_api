@@ -4,6 +4,7 @@ import json
 
 from graphene_django.types import DjangoObjectType
 from .models import User
+from config import jwt_key
 
 class UserType(DjangoObjectType):
   class Meta:
@@ -62,7 +63,7 @@ class LoginUser(graphene.Mutation):
       'id': user.id,
       'username': user.username
     }
-    jwt_token = jwt.encode(payload, 'SECRET_KEY', algorithm='HS256')
+    jwt_token = jwt.encode(payload, jwt_key, algorithm='HS256')
     return LoginUser(jwt_token=jwt_token)
 
 
@@ -82,7 +83,7 @@ class DeleteUser(graphene.Mutation):
     if len(authorization) == 1 or authorization[0] != 'b':
       raise Exception('Authentication credentials were not provided')
 
-    token = jwt.decode(authorization[1], 'SECRET_KEY')
+    token = jwt.decode(authorization[1], jwt_key)
     username = token.get('username')
     id = token.get('id')
 

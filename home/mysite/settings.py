@@ -12,15 +12,17 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+# import database settings and secrets
+from config import postgres_host, postgres_username, postgres_password, django_key
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3=ej78l5m7@rw$j1pws!#d#6505a(#q+l*)rixvq=*ol%sjq0('
+SECRET_KEY = django_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -75,13 +77,14 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'django_graphql_api',
-        'USER': 'postgres',
-        'PASSWORD': '$password',
-        'HOST': 'django-graphql-api.c975xkidsqbw.us-west-1.rds.amazonaws.com',
+        'USER': postgres_username,
+        'PASSWORD': postgres_password,
+        'HOST': postgres_host,
         'PORT': '5432',
     }
 }
