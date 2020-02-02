@@ -36,16 +36,21 @@ class Query(object):
     return None
   
   def resolve_viewer(self, info, **kwargs):
-    authorization = info.context.headers.get('Authorization').split('\'')
-    print(authorization)
-    if not authorization or len(authorization) == 1 or authorization[0] != 'b':
+    authorization = info.context.headers.get('Authorization')
+    if not authorization:
       raise Exception('Authentication credentials were not provided')
+    
+    authorization = authorization.split('\'')
+    if len(authorization) == 1 or authorization[0] != 'b':
+      raise Exception('Authentication credentials were not provided')
+
     token = jwt.decode(authorization[1], 'SECRET_KEY')
     username = token.get('username')
     id = token.get('id')
+
     user = User.objects.get(username=username, id=id)
-    if not user:
-      raise Exception('Authentication credentials were not provided')
+    if not user.is_authenticated:
+      raise Exception('Authentication not validated')
     return user
 
 class CreateUser(graphene.Mutation):
@@ -83,6 +88,36 @@ class LoginUser(graphene.Mutation):
     jwt_token = jwt.encode(payload, 'SECRET_KEY', algorithm='HS256')
     return LoginUser(jwt_token=jwt_token)
 
+class DeleteUser(graphene.Mutation):
+
+  ok = graphene.Boolean()
+
+  def mutate(self, info, **kwargs):
+    id = kwargs.get('id')
+    username = kwargs.get('username')
+
+    authorization = info.context.headers.get('Authorization')
+    if not authorization:
+      raise Exception('Authentication credentials were not provided')
+    
+    authorization = authorization.split('\'')
+    if len(authorization) == 1 or authorization[0] != 'b':
+      raise Exception('Authentication credentials were not provided')
+
+    token = jwt.decode(authorization[1], 'SECRET_KEY')
+    username = token.get('username')
+    id = token.get('id')
+
+    user = User.objects.get(pk=id, username=username)
+
+    if not user.is_authenticated:
+      raise Exception('Authentication not validated')
+
+    user.delete()
+    ok = True
+    return DeleteUser(ok=ok)
+
 class Mutation(graphene.ObjectType):
   create_user = CreateUser.Field()
   login_user = LoginUser.Field()
+  delete_user = DeleteUser.Field()
