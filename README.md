@@ -11,7 +11,7 @@ Within the root directory of the repo:
   pip install -r requirements.txt
   ```
 
-Within the home directory:
+Within the src directory:
   ```bash
   python manage.py runserver
   ```
