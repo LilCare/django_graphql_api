@@ -2,7 +2,7 @@
 API using Django, GraphQL, PostgreSQL
 
 
-##Getting Started
+## Getting Started
 
 Within the root directory of the repo:
   ```bash
@@ -15,7 +15,7 @@ Within the home directory:
   ```
 
 
-##Sample GraphQL Queries
+## Sample GraphQL Queries
 
 -Check if a username exists in your database:
   ```
@@ -49,7 +49,7 @@ Within the home directory:
   ```
 
 -Delete a user:
-Required Headers: {"Authorization": "b'<token>'"}
+Required Headers: {"Authorization": "b'< token >'"}
   ```
   mutation {
     deleteUser {
