@@ -1,7 +1,7 @@
 import graphene
+import graphql_jwt
 
 from graphene_django.types import DjangoObjectType
-# from graphene_django.filter import DjangoFilterConnectionField
 
 from .models import User
 
@@ -15,6 +15,9 @@ class Query(object):
   user = graphene.Field(UserType,
                         id=graphene.Int(),
                         username=graphene.String())
+  login = graphene.Field(UserType,
+                        username=graphene.String(required=True),
+                        password=graphene.String(required=True))
 
   def resolve_all_users(self, info, **kwargs):
     return User.objects.all()
@@ -30,8 +33,16 @@ class Query(object):
       return User.objects.get(username=username)
 
     return None
+  
+  def resolve_login(self, info, **kwargs):
+    user = info.context.user
+    print("Here is the user context")
+    print(user.is_authenticated)
+    if not user.is_authenticated:
+      raise Exception('Authentication credentials were not provided')
+    return user
 
-class UserMutation(graphene.Mutation):
+class CreateUser(graphene.Mutation):
   class Arguments:
     # The input arguments for this mutation
     username = graphene.String(required=True)
@@ -44,9 +55,12 @@ class UserMutation(graphene.Mutation):
     user = User(username = username, password=password)
     user.save()
     # Notice we return an instance of this mutation
-    return UserMutation(user=user)
+    return CreateUser(user=user)
 
 
 class Mutation(graphene.ObjectType):
-  create_user = UserMutation.Field()
-    
+  create_user = CreateUser.Field()
+
+  token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+  verify_token = graphql_jwt.Verify.Field()
+  refresh_token = graphql_jwt.Refresh.Field()

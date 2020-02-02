@@ -91,8 +91,19 @@ DATABASES = {
 
 GRAPHENE = {
     # 'SCHEMA': 'django_root.schema.schema'
-    'SCHEMA': 'schema.schema'
+    'SCHEMA': 'schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
 }
+
+# JSON WebToken 
+# 
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 
 # Password validation

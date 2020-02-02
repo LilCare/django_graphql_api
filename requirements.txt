@@ -1,2 +1,5 @@
 ###### GraphQL ######
 graphene-django
+
+###### JSON Webtokens ######
+django-graphql-jwt
