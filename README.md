@@ -7,6 +7,8 @@ API using Django, GraphQL, PostgreSQL
 - Python 3.7.3
 - Pip 20.0.2
 
+## Install Python Packages
+
 - Within the root directory of the repo:
   ```bash
   pip install -r requirements.txt
@@ -14,16 +16,16 @@ API using Django, GraphQL, PostgreSQL
   ```bash
   cd src
   ```
+## Run Application
 
 - Within the src directory:
   ```bash
   python manage.py runserver
   ```
 
+- Interact with API at [http://127.0.0.1:8000/graphql/](http://127.0.0.1:8000/graphql/)
 
 ## Sample GraphQL Queries
-
-Interact with API at [http://127.0.0.1:8000/graphql/](http://127.0.0.1:8000/graphql/)
 
 - Check if a username exists in your database:
   ```
