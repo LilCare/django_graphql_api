@@ -13,7 +13,7 @@ Within the root directory of the repo:
   ```bash
   cd src
   ```
-  
+
 Within the src directory:
   ```bash
   python manage.py runserver
@@ -21,6 +21,8 @@ Within the src directory:
 
 
 ## Sample GraphQL Queries
+
+Interact with API at [http://127.0.0.1:8000/graphql/](http://127.0.0.1:8000/graphql/)
 
 -Check if a username exists in your database:
   ```
