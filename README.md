@@ -4,8 +4,8 @@ API using Django, GraphQL, PostgreSQL
 
 ## Required Environment Dependencies
 
-Python 3.7.3
-Pip 20.0.2
+- Python 3.7.3
+- Pip 20.0.2
 
 Within the root directory of the repo:
   ```bash
