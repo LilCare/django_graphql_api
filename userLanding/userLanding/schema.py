@@ -3,7 +3,6 @@ import jwt
 import json
 
 from graphene_django.types import DjangoObjectType
-
 from .models import User
 
 class UserType(DjangoObjectType):
@@ -11,18 +10,12 @@ class UserType(DjangoObjectType):
     model = User
     fields = ('id', 'username')
 
+
 class Query(object):
-  all_users = graphene.List(UserType)
   user = graphene.Field(UserType,
                         id=graphene.Int(),
                         username=graphene.String())
-  viewer = graphene.Field(UserType,
-                        username=graphene.String(required=True),
-                        password=graphene.String(required=True))
 
-  def resolve_all_users(self, info, **kwargs):
-    return User.objects.all()
-  
   def resolve_user(self, info, **kwargs):
     id = kwargs.get('id')
     username = kwargs.get('username')
@@ -34,24 +27,7 @@ class Query(object):
       return User.objects.get(username=username)
 
     return None
-  
-  def resolve_viewer(self, info, **kwargs):
-    authorization = info.context.headers.get('Authorization')
-    if not authorization:
-      raise Exception('Authentication credentials were not provided')
-    
-    authorization = authorization.split('\'')
-    if len(authorization) == 1 or authorization[0] != 'b':
-      raise Exception('Authentication credentials were not provided')
 
-    token = jwt.decode(authorization[1], 'SECRET_KEY')
-    username = token.get('username')
-    id = token.get('id')
-
-    user = User.objects.get(username=username, id=id)
-    if not user.is_authenticated:
-      raise Exception('Authentication not validated')
-    return user
 
 class CreateUser(graphene.Mutation):
   class Arguments:
@@ -64,6 +40,7 @@ class CreateUser(graphene.Mutation):
     user = User(username = username, password=password)
     user.save()
     return CreateUser(user=user)
+
 
 class LoginUser(graphene.Mutation):
   class Arguments:
@@ -87,6 +64,7 @@ class LoginUser(graphene.Mutation):
     }
     jwt_token = jwt.encode(payload, 'SECRET_KEY', algorithm='HS256')
     return LoginUser(jwt_token=jwt_token)
+
 
 class DeleteUser(graphene.Mutation):
 
@@ -116,6 +94,7 @@ class DeleteUser(graphene.Mutation):
     user.delete()
     ok = True
     return DeleteUser(ok=ok)
+
 
 class Mutation(graphene.ObjectType):
   create_user = CreateUser.Field()

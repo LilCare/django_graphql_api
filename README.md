@@ -20,3 +20,11 @@ API using Django, GraphQL, PostgreSQL
       }
     }
   }
+
+-Login a user:
+
+  mutation loginUser($username: String!, $password: String!) {
+    loginUser(username: $username, password: $password) {
+      jwtToken
+    }
+  }
