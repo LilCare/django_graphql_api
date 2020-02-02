@@ -79,9 +79,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'django_graphql_api',
-        'USER': 'djangouser',
+        'USER': 'postgres',
         'PASSWORD': '$password',
-        'HOST': '127.0.0.1',
+        'HOST': 'django-graphql-api.c975xkidsqbw.us-west-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
