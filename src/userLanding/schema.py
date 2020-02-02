@@ -4,6 +4,7 @@ import json
 
 from graphene_django.types import DjangoObjectType
 from .models import User
+from .controllers import searchUser, saveUser, authenticate, verifyToken, deleteUser
 from config import jwt_key
 
 class UserType(DjangoObjectType):
@@ -18,16 +19,7 @@ class Query(object):
                         username=graphene.String())
 
   def resolve_user(self, info, **kwargs):
-    id = kwargs.get('id')
-    username = kwargs.get('username')
-
-    if id is not None:
-      return User.objects.get(pk=id)
-
-    if username is not None:
-      return User.objects.get(username=username)
-
-    return None
+    return searchUser(**kwargs)
 
 
 class CreateUser(graphene.Mutation):
@@ -38,8 +30,7 @@ class CreateUser(graphene.Mutation):
   user = graphene.Field(UserType)
 
   def mutate(self, info, username, password):
-    user = User(username = username, password=password)
-    user.save()
+    user = saveUser(username, password)
     return CreateUser(user=user)
 
 
@@ -51,19 +42,7 @@ class LoginUser(graphene.Mutation):
   jwt_token = graphene.String()
 
   def mutate(self, info, username, password):
-    user = User.objects.get(username = username, password=password)
-    
-    if not user:
-      raise Exception('Valid credentials were not provided')
-
-    user.is_authenticated = True
-    user.save()
-
-    payload = {
-      'id': user.id,
-      'username': user.username
-    }
-    jwt_token = jwt.encode(payload, jwt_key, algorithm='HS256')
+    jwt_token = authenticate(username, password)
     return LoginUser(jwt_token=jwt_token)
 
 
@@ -71,29 +50,10 @@ class DeleteUser(graphene.Mutation):
 
   ok = graphene.Boolean()
 
-  def mutate(self, info, **kwargs):
-    id = kwargs.get('id')
-    username = kwargs.get('username')
-
+  def mutate(self, info):
     authorization = info.context.headers.get('Authorization')
-    if not authorization:
-      raise Exception('Authentication credentials were not provided')
-    
-    authorization = authorization.split('\'')
-    if len(authorization) == 1 or authorization[0] != 'b':
-      raise Exception('Authentication credentials were not provided')
-
-    token = jwt.decode(authorization[1], jwt_key)
-    username = token.get('username')
-    id = token.get('id')
-
-    user = User.objects.get(pk=id, username=username)
-
-    if not user.is_authenticated:
-      raise Exception('Authentication not validated')
-
-    user.delete()
-    ok = True
+    token = verifyToken(authorization)
+    ok = deleteUser(token)
     return DeleteUser(ok=ok)
 
 
