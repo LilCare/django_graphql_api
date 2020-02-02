@@ -10,7 +10,10 @@ Within the root directory of the repo:
   ```bash
   pip install -r requirements.txt
   ```
-
+  ```bash
+  cd src
+  ```
+  
 Within the src directory:
   ```bash
   python manage.py runserver
