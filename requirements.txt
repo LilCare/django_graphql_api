@@ -2,4 +2,5 @@
 graphene-django
 
 ###### JSON Webtokens ######
-django-graphql-jwt
+# django-graphql-jwt
+pyjwt

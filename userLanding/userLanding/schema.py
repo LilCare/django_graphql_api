@@ -1,5 +1,6 @@
 import graphene
-import graphql_jwt
+import jwt
+import json
 
 from graphene_django.types import DjangoObjectType
 
@@ -15,7 +16,7 @@ class Query(object):
   user = graphene.Field(UserType,
                         id=graphene.Int(),
                         username=graphene.String())
-  login = graphene.Field(UserType,
+  viewer = graphene.Field(UserType,
                         username=graphene.String(required=True),
                         password=graphene.String(required=True))
 
@@ -34,33 +35,54 @@ class Query(object):
 
     return None
   
-  def resolve_login(self, info, **kwargs):
-    user = info.context.user
-    print("Here is the user context")
-    print(user.is_authenticated)
-    if not user.is_authenticated:
+  def resolve_viewer(self, info, **kwargs):
+    authorization = info.context.headers.get('Authorization').split('\'')
+    print(authorization)
+    if not authorization or len(authorization) == 1 or authorization[0] != 'b':
+      raise Exception('Authentication credentials were not provided')
+    token = jwt.decode(authorization[1], 'SECRET_KEY')
+    username = token.get('username')
+    id = token.get('id')
+    user = User.objects.get(username=username, id=id)
+    if not user:
       raise Exception('Authentication credentials were not provided')
     return user
 
 class CreateUser(graphene.Mutation):
   class Arguments:
-    # The input arguments for this mutation
     username = graphene.String(required=True)
     password = graphene.String(required=True)
 
-  # The class attributes define the response of the mutation
   user = graphene.Field(UserType)
 
   def mutate(self, info, username, password):
     user = User(username = username, password=password)
     user.save()
-    # Notice we return an instance of this mutation
     return CreateUser(user=user)
 
+class LoginUser(graphene.Mutation):
+  class Arguments:
+    username = graphene.String(required=True)
+    password = graphene.String(required=True)
+
+  jwt_token = graphene.String()
+
+  def mutate(self, info, username, password):
+    user = User.objects.get(username = username, password=password)
+    
+    if not user:
+      raise Exception('Valid credentials were not provided')
+
+    user.is_authenticated = True
+    user.save()
+
+    payload = {
+      'id': user.id,
+      'username': user.username
+    }
+    jwt_token = jwt.encode(payload, 'SECRET_KEY', algorithm='HS256')
+    return LoginUser(jwt_token=jwt_token)
 
 class Mutation(graphene.ObjectType):
   create_user = CreateUser.Field()
-
-  token_auth = graphql_jwt.ObtainJSONWebToken.Field()
-  verify_token = graphql_jwt.Verify.Field()
-  refresh_token = graphql_jwt.Refresh.Field()
+  login_user = LoginUser.Field()
