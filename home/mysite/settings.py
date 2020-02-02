@@ -90,7 +90,6 @@ DATABASES = {
 # https://docs.graphene-python.org/projects/django/en/latest/installation/
 
 GRAPHENE = {
-    # 'SCHEMA': 'django_root.schema.schema'
     'SCHEMA': 'schema.schema',
 }
 

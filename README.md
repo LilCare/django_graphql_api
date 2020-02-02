@@ -9,7 +9,7 @@ Within the root directory of the repo:
   pip install -r requirements.txt
   ```
 
-Within the parent userLanding directory:
+Within the home directory:
   ```bash
   python manage.py runserver
   ```
