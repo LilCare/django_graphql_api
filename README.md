@@ -4,7 +4,7 @@ API using Django, GraphQL, PostgreSQL
 
 ## Required Environment Dependencies
 
-
+Python 3.7.3
 
 Within the root directory of the repo:
   ```bash

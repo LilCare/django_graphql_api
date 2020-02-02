@@ -1,5 +1,11 @@
+###### Django ######
+Django==3.0.2
+
 ###### GraphQL ######
-graphene-django
+graphene-django==2.8.0
 
 ###### JSON Webtokens ######
-pyjwt
+PyJWT==1.7.1
+
+###### PostgreSQL DB binder ######
+psycopg2==2.7.7
