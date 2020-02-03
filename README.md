@@ -1,5 +1,5 @@
 # django_graphql_api
-API using Django, GraphQL, PostgreSQL
+API using Django, GraphQL, PostgreSQL, PyJWT
 
 
 ## Required Environment Dependencies
