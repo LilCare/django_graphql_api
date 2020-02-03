@@ -23,7 +23,7 @@ API using Django, GraphQL, PostgreSQL, PyJWT
   python manage.py runserver
   ```
 
-- Interact with API at [http://127.0.0.1:8000/graphql/](http://127.0.0.1:8000/graphql/)
+- Interact with API at [http://127.0.0.1:8000/graphql](http://127.0.0.1:8000/graphql)
 
 ## Sample GraphQL Queries
 
