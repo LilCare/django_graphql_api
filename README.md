@@ -13,11 +13,11 @@ API using Django, GraphQL, PostgreSQL
   ```bash
   pip install -r requirements.txt
   ```
+## Run Application
+- Navigate to src directory:
   ```bash
   cd src
   ```
-## Run Application
-
 - Within the src directory:
   ```bash
   python manage.py runserver

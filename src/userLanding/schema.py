@@ -1,11 +1,8 @@
 import graphene
-import jwt
-import json
 
 from graphene_django.types import DjangoObjectType
 from .models import User
 from .controllers import searchUser, saveUser, authenticate, verifyToken, deleteUser
-from config import jwt_key
 
 class UserType(DjangoObjectType):
   class Meta:
